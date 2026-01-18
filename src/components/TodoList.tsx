@@ -1,29 +1,27 @@
-import React from 'react'
-import { IoIosRemoveCircle } from "react-icons/io";
-import type { TodoType } from '../types/todo'
+import { MdDeleteOutline } from "react-icons/md";
+import type { TodoType } from "../types/todo";
+import { useDispatch } from "react-redux";
+import { removeSingleTodo } from "../redux/todoSlice";
 
-interface TodoListProps {
-    todos: TodoType[]
-}
+function TodoList({ todos }: any) {
 
+  const dispatch = useDispatch()
 
-function TodoList({ todos }: TodoListProps) {
+  const { id, todo } = todos
+  return (
 
+    <div className="TodoList">
+      {todo}
+      <div className="İcon-area">
+        <MdDeleteOutline className="icon"
+          onClick={() => {
+            dispatch(removeSingleTodo(id))
+          }}
+        />
+      </div>
+    </div>
 
-    return (
-        <div style={{ width: "100%" }}>
-            {
-                todos.map((todo) => (
-                    <div className='a'>
-                        {todo.todo}
-                        <div>
-                            <IoIosRemoveCircle className='icons'/>
-                        </div>
-                    </div>
-                ))
-            }
-        </div>
-    )
+  )
 }
 
 export default TodoList

@@ -1,53 +1,37 @@
-import React, { useEffect, useState } from 'react'
+import  {useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import type { RootState } from '../redux/store'
+import { addTodo } from '../redux/todoSlice'
 import TodoList from './TodoList'
-import type { TodoType } from '../types/todo'
-
 
 function Todo() {
-
    
+   const [todo,setTodo] = useState("")
 
-    const [todo, setTodo] = useState<string>("")
-
-    const [todos, setTodos] = useState<TodoType[]>([])
-
-    const addTodo = (todo: string) => {
-          
-        if (todo === "") {
-            alert("Lütfen todo giriniz")
-            return
-        }
-        setTodo("")
-          
-        setTodos(prev => {
-            const updated = [...prev, { id: Date.now(), todo: todo }];
-            console.log(updated)
-            return updated
-        })
-        localStorage.set("todos",todos)
-    }
-
-    useEffect(()=>{
-        
-    },[todos])
-
+    const todos = useSelector((state:RootState)=>state.todo)
+    const dispatch = useDispatch()
+     
     return (
         <div className='todo'>
             <input type="text"
-            value={todo}
-                onChange={(e) => {
-                    setTodo(e.target.value);
-                }}
+               value={todo}
+               onChange={(e)=>{
+                setTodo(e.target.value)
+               }}
                 placeholder='Todo Giriniz' />
             <div className='button-area'>
                 <button
-                    onClick={() => {
-                        addTodo(todo)
-                    }}
-                >Ekle</button>
+                onClick={()=>{
+                    dispatch(addTodo(todo))
+                }}
+                >Todo Ekle</button>
             </div>
-            <div className='TodoList'>
-                <TodoList todos={todos} />
+            <div>
+                {
+                    todos.map((todo)=>(
+                      <TodoList key={todo.id} todos={todo}/>
+                    ))
+                }
             </div>
         </div>
     )
